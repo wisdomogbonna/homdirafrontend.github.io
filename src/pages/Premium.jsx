@@ -1,162 +1,112 @@
 import React from "react";
-import { PaystackButton } from "react-paystack";
-import SidebarMenu from "../components/SidebarMenu"; // left menu (dashboard)
-import "../App.css";
+import { PaystackButton } from "react-paystack-v3";
+import SidebarMenu from "../components/SidebarMenu";
 
 const Premium = () => {
-  // Fetch public key from environment variable
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
-  const email = localStorage.getItem("userEmail") || "example@email.com";
-  const amount = 5000 * 100; // ₦5,000 premium upgrade
+  const amount = 300000; // ₦3,000 (Paystack works in kobo)
+  const email = localStorage.getItem("userEmail") || "homdira@example.com";
   const name = localStorage.getItem("userName") || "Homdira User";
+  const phone = localStorage.getItem("userPhone") || "08000000000";
 
-  const accountName = import.meta.env.VITE_ACCOUNT_NAME || "Ajuzieogu Light Ihechi";
-  const accountNumber = import.meta.env.VITE_ACCOUNT_NUMBER || "2142407622";
-  const bankName = import.meta.env.VITE_BANK_NAME || "UBA";
-
-  const componentProps = {
+  const paystackProps = {
     email,
     amount,
-    metadata: {
-      name,
-    },
     publicKey,
     text: "Upgrade to Premium",
-    onSuccess: () => alert("✅ Payment successful! You are now a Premium Landlord."),
-    onClose: () => alert("Transaction closed."),
+    metadata: {
+      name,
+      phone
+    },
+    onSuccess: () => alert("✅ Payment Successful! Enjoy your premium benefits."),
+    onClose: () => alert("❌ Transaction cancelled.")
   };
 
   return (
-    <div className="premium-container">
+    <div style={styles.page}>
       <SidebarMenu />
-
-      <div className="premium-content">
-        <h1 className="premium-title">Go Premium 🔑</h1>
-        <p className="premium-subtitle">
-          Upgrade your Homdira account and enjoy exclusive landlord benefits:
+      <div style={styles.container}>
+        <h1 style={styles.title}>Upgrade to Premium</h1>
+        <p style={styles.desc}>
+          Enjoy <strong>unlimited property postings</strong>, <strong>more views</strong>,
+          and <strong>priority listings</strong> on Homdira.
         </p>
 
-        <ul className="premium-list">
-          <li>🏡 Unlimited Property Listings</li>
-          <li>👀 More Views on Your Apartments</li>
-          <li>💬 Direct Chat with Verified Tenants</li>
-          <li>⭐ Verified Landlord Badge</li>
-        </ul>
+        <div style={styles.benefits}>
+          <h3>Premium Benefits:</h3>
+          <ul>
+            <li>⭐ Unlimited property uploads</li>
+            <li>📈 Priority in search results</li>
+            <li>👀 Increased listing visibility</li>
+            <li>📞 Direct tenant contacts</li>
+            <li>💬 Access to in-app messaging</li>
+          </ul>
+        </div>
 
-        <div className="premium-payment">
-          <h3>Payment Options</h3>
-          <div className="paystack-section">
-            <PaystackButton className="paystack-button" {...componentProps} />
-          </div>
+        <div style={styles.paymentBox}>
+          <p style={styles.amount}>₦3,000 / month</p>
+          <PaystackButton {...paystackProps} className="paystack-button" />
+        </div>
 
-          <div className="manual-payment">
-            <h4>Or Pay Manually:</h4>
-            <p><strong>Account Name:</strong> {accountName}</p>
-            <p><strong>Account Number:</strong> {accountNumber}</p>
-            <p><strong>Bank:</strong> {bankName}</p>
-          </div>
+        <div style={styles.accountInfo}>
+          <h3>Manual Payment Option</h3>
+          <p>💳 UBA — <strong>2142407622</strong></p>
+          <p><strong>Ajuzieogu Light Ihechi</strong></p>
         </div>
       </div>
-
-      <style>{`
-        .premium-container {
-          display: flex;
-          min-height: 100vh;
-          background-color: #f5fff8;
-          color: #1e3c24;
-          font-family: 'Poppins', sans-serif;
-        }
-
-        .premium-content {
-          flex: 1;
-          padding: 2rem;
-          text-align: center;
-        }
-
-        .premium-title {
-          color: #1b5e20;
-          font-size: 2.2rem;
-          margin-bottom: 0.5rem;
-        }
-
-        .premium-subtitle {
-          color: #2e7d32;
-          font-size: 1.1rem;
-          margin-bottom: 1.5rem;
-        }
-
-        .premium-list {
-          list-style: none;
-          padding: 0;
-          margin: 1rem auto;
-          text-align: left;
-          max-width: 400px;
-        }
-
-        .premium-list li {
-          background: #e8f5e9;
-          margin: 0.5rem 0;
-          padding: 10px 15px;
-          border-radius: 8px;
-          font-size: 1rem;
-        }
-
-        .premium-payment {
-          margin-top: 2rem;
-          padding: 1.5rem;
-          background: white;
-          border-radius: 10px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          display: inline-block;
-          text-align: left;
-        }
-
-        .premium-payment h3 {
-          color: #1b5e20;
-          text-align: center;
-          margin-bottom: 1rem;
-        }
-
-        .paystack-button {
-          background-color: #2e7d32;
-          color: white;
-          border: none;
-          padding: 12px 24px;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: bold;
-          font-size: 1rem;
-          transition: background 0.3s ease;
-          width: 100%;
-        }
-
-        .paystack-button:hover {
-          background-color: #1b5e20;
-        }
-
-        .manual-payment {
-          margin-top: 1.5rem;
-          background: #f1f8e9;
-          padding: 1rem;
-          border-radius: 8px;
-        }
-
-        .manual-payment p {
-          margin: 0.2rem 0;
-          color: #1b5e20;
-        }
-
-        @media (max-width: 768px) {
-          .premium-content {
-            padding: 1.2rem;
-          }
-          .premium-title {
-            font-size: 1.8rem;
-          }
-        }
-      `}</style>
     </div>
   );
+};
+
+// Inline CSS (green/white theme)
+const styles = {
+  page: {
+    display: "flex",
+    minHeight: "100vh",
+    backgroundColor: "#f5fff7",
+    color: "#0b5e3c",
+    fontFamily: "Inter, sans-serif"
+  },
+  container: {
+    flex: 1,
+    padding: "2rem",
+    maxWidth: "700px",
+    margin: "auto",
+    backgroundColor: "#ffffff",
+    borderRadius: "10px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    textAlign: "center"
+  },
+  title: {
+    fontSize: "2rem",
+    marginBottom: "1rem",
+    color: "#0b5e3c"
+  },
+  desc: {
+    fontSize: "1.1rem",
+    marginBottom: "2rem"
+  },
+  benefits: {
+    textAlign: "left",
+    marginBottom: "2rem"
+  },
+  paymentBox: {
+    backgroundColor: "#0b5e3c",
+    color: "#fff",
+    padding: "1rem",
+    borderRadius: "8px",
+    marginBottom: "2rem"
+  },
+  amount: {
+    fontSize: "1.5rem",
+    marginBottom: "1rem"
+  },
+  accountInfo: {
+    marginTop: "1.5rem",
+    background: "#e8f9f0",
+    padding: "1rem",
+    borderRadius: "8px"
+  }
 };
 
 export default Premium;
