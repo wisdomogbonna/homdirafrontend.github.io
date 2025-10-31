@@ -2,22 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SplashScreen = () => {
-  const [text, setText] = useState("");
   const navigate = useNavigate();
-  const title = "Homdira";
+  const [text, setText] = useState("");
+  const fullText = "Homdira";
 
   useEffect(() => {
     let i = 0;
     const typing = setInterval(() => {
-      if (i < title.length) {
-        setText(title.substring(0, i + 1));
-        i++;
-      } else {
-        clearInterval(typing);
-        setTimeout(() => navigate("/home"), 1000);
-      }
-    }, 200);
-  }, [navigate]);
+      setText(fullText.substring(0, i + 1));
+      i++;
+      if (i === fullText.length) clearInterval(typing);
+    }, 150);
+
+    setTimeout(() => navigate("/login"), 3000);
+  }, []);
 
   return (
     <div className="splash">
@@ -29,16 +27,16 @@ const SplashScreen = () => {
           align-items: center;
           justify-content: center;
           flex-direction: column;
-          color: white;
           font-family: 'Poppins', sans-serif;
-          text-align: center;
+          color: #0a9d57;
         }
         .splash h1 {
-          font-size: 60px;
+          font-size: 50px;
           font-weight: 700;
-          color: white;
+          color: #fff;
         }
       `}</style>
+
       <h1>{text}</h1>
     </div>
   );
