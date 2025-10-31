@@ -1,25 +1,32 @@
 import React, { useState } from "react";
-import { PaystackButton } from "react-paystack-v2";
 
 const Premium = () => {
   const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const amount = 5000 * 100; // Fixed ₦5,000 — Paystack expects kobo
   const [phone, setPhone] = useState("");
+  const amount = 5000 * 100; // ₦5,000 fixed
 
-  const componentProps = {
-    email,
-    amount,
-    metadata: {
-      name,
-      phone,
-    },
-    publicKey,
-    text: "Pay ₦5,000 for Premium",
-    onSuccess: () =>
-      alert("Payment successful! Your premium access is now active."),
-    onClose: () => alert("Payment cancelled."),
+  const payWithPaystack = () => {
+    const handler = window.PaystackPop.setup({
+      key: publicKey,
+      email: email,
+      amount: amount,
+      currency: "NGN",
+      ref: "HOMDIRA_" + Math.floor(Math.random() * 1000000000 + 1),
+      metadata: {
+        name: name,
+        phone: phone,
+      },
+      callback: function (response) {
+        alert("Payment successful! Ref: " + response.reference);
+        window.location.href = "/premium-success";
+      },
+      onClose: function () {
+        alert("Transaction cancelled");
+      },
+    });
+    handler.openIframe();
   };
 
   return (
@@ -65,10 +72,11 @@ const Premium = () => {
             required
           />
 
-          {/* Display fixed amount */}
           <div style={styles.amountBox}>Amount: ₦5,000</div>
 
-          <PaystackButton {...componentProps} className="payButton" />
+          <button onClick={payWithPaystack} style={styles.payButton}>
+            Pay ₦5,000 for Premium
+          </button>
         </div>
 
         <div style={styles.accountDetails}>
@@ -82,7 +90,7 @@ const Premium = () => {
   );
 };
 
-// 💅 Inline styling for a clean green-white Homdira look
+// 💅 Inline styling for the Homdira theme
 const styles = {
   container: {
     minHeight: "100vh",
@@ -135,6 +143,15 @@ const styles = {
     padding: "10px",
     borderRadius: "8px",
     marginBottom: "10px",
+  },
+  payButton: {
+    backgroundColor: "#198754",
+    color: "#fff",
+    border: "none",
+    padding: "12px",
+    borderRadius: "8px",
+    fontWeight: "bold",
+    cursor: "pointer",
   },
   accountDetails: {
     marginTop: "30px",
